@@ -1,0 +1,534 @@
+/* =================================================================
+   RESET - Strip all default browser margins, padding, and sizing
+   ================================================================= */
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+img, svg {
+    display: block;
+    max-width: 100%;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+/* =================================================================
+   COLOR VARIABLES - Light mode (default)
+   ================================================================= */
+
+:root {
+    --color-primary: hsl(120, 68%, 15%);           /* #0C410C */
+    --color-primary-light: hsl(120, 68%, 25%);      /* #148A14 */
+    --color-primary-lighter: hsl(120, 68%, 35%);    /* #1D6B1D */
+
+    --color-secondary: hsl(36, 100%, 50%);          /* #FF9900 */
+    --color-secondary-light: hsl(36, 100%, 60%);    /* #FFB333 */
+    --color-secondary-lighter: hsl(36, 100%, 70%);  /* #FFCC66 */
+
+    --color-text: hsl(100, 10%, 12%);               /* #1D201B */
+    --color-text-muted: hsl(100, 6%, 40%);          /* #616660 */
+    --color-text-light: hsl(100, 4%, 58%);          /* #919592 */
+
+    --color-cream: hsl(39, 50%, 87%);               /* #E2CDA8 */
+    --color-cream-dark: hsl(36, 40%, 78%);          /* #D4BD9C */
+    --color-cream-light: hsl(40, 55%, 92%);         /* #F2E8D5 */
+
+    --color-bg: var(--color-cream-light);            /* #F2E8D5 */
+    --color-surface: var(--color-cream);             /* #E2CDA8 */
+    --color-border: var(--color-cream-dark);         /* #D4BD9C */
+}
+
+/* =================================================================
+   COLOR VARIABLES - Dark mode
+   ================================================================= */
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --color-primary: hsl(120, 50%, 22%);        /* #1C5C1C */
+        --color-primary-light: hsl(120, 45%, 32%);   /* #2D762D */
+        --color-primary-lighter: hsl(120, 40%, 42%);  /* #409640 */
+
+        --color-secondary: hsl(36, 100%, 55%);       /* #FFA319 */
+        --color-secondary-light: hsl(36, 90%, 65%);   /* #F5BE4D */
+        --color-secondary-lighter: hsl(36, 80%, 75%); /* #F0D080 */
+
+        --color-text: hsl(42, 30%, 90%);             /* #EBE3D5 */
+        --color-text-muted: hsl(42, 15%, 65%);       /* #ADA595 */
+        --color-text-light: hsl(42, 10%, 50%);       /* #8C8573 */
+
+        --color-cream: hsl(120, 10%, 14%);           /* #202E20 */
+        --color-cream-dark: hsl(120, 8%, 10%);       /* #171D17 */
+        --color-cream-light: hsl(120, 10%, 18%);     /* #293829 */
+
+        --color-bg: hsl(120, 12%, 8%);               /* #121C12 */
+        --color-surface: hsl(120, 10%, 14%);         /* #202E20 */
+        --color-border: hsl(120, 8%, 22%);           /* #333D33 */
+    }
+}
+
+[data-theme="dark"] {
+    --color-primary: hsl(120, 50%, 22%);            /* #1C5C1C */
+    --color-primary-light: hsl(120, 45%, 32%);      /* #2D762D */
+    --color-primary-lighter: hsl(120, 40%, 42%);    /* #409640 */
+
+    --color-secondary: hsl(36, 100%, 55%);          /* #FFA319 */
+    --color-secondary-light: hsl(36, 90%, 65%);     /* #F5BE4D */
+    --color-secondary-lighter: hsl(36, 80%, 75%);   /* #F0D080 */
+
+    --color-text: hsl(42, 30%, 90%);                /* #EBE3D5 */
+    --color-text-muted: hsl(42, 15%, 65%);          /* #ADA595 */
+    --color-text-light: hsl(42, 10%, 50%);          /* #8C8573 */
+
+    --color-cream: hsl(120, 10%, 14%);              /* #202E20 */
+    --color-cream-dark: hsl(120, 8%, 10%);          /* #171D17 */
+    --color-cream-light: hsl(120, 10%, 18%);        /* #293829 */
+
+    --color-bg: hsl(120, 12%, 8%);                  /* #121C12 */
+    --color-surface: hsl(120, 10%, 14%);            /* #202E20 */
+    --color-border: hsl(120, 8%, 22%);              /* #333D33 */
+}
+
+/* =================================================================
+   FONTS - Self-hosted
+   ================================================================= */
+
+@font-face {
+    font-family: 'Oldtimer';
+    src: url('Assets/Fonts/Oldtimer.woff2') format('woff2'),
+         url('Assets/Fonts/Oldtimer.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Trocchi';
+    src: url('Assets/Fonts/Trocchi-Regular.woff2') format('woff2'),
+         url('Assets/Fonts/Trocchi-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* =================================================================
+   FONT ASSIGNMENTS
+   ================================================================= */
+
+body {
+    font-family: 'Trocchi', Georgia, serif;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Oldtimer', sans-serif;
+}
+
+/* =================================================================
+   SITE HEADER
+   ================================================================= */
+
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 1rem 0;
+}
+
+.site-header .container {
+    background-color: color-mix(in srgb, var(--color-primary-lighter) 55%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+    box-shadow: 4px 4px 24px color-mix(in srgb, var(--color-primary-lighter) 35%, transparent);
+    border-radius: 2rem;
+    padding: 0.75rem 2rem;
+    width: fit-content;
+    max-width: 95%;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 2.5rem;
+    width: auto;
+}
+
+.nav-logo-text {
+    height: 2.5rem;
+    width: auto;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-link {
+    color: var(--color-cream-light);
+    text-decoration: none;
+    font-family: 'Trocchi', Georgia, serif;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
+}
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+.nav-cta {
+    color: var(--color-cream-light);
+    text-decoration: none;
+    font-family: 'Trocchi', Georgia, serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    background-color: color-mix(in srgb, var(--color-cream-light) 15%, transparent);
+    padding: 0.4rem 1rem;
+    border-radius: 1rem;
+    transition: background-color 0.2s;
+}
+
+.nav-cta:hover {
+    background-color: color-mix(in srgb, var(--color-cream-light) 25%, transparent);
+}
+
+.theme-toggle {
+    background: color-mix(in srgb, var(--color-cream-light) 15%, transparent);
+    border: none;
+    color: var(--color-cream-light);
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.theme-toggle:hover {
+    background: color-mix(in srgb, var(--color-cream-light) 25%, transparent);
+}
+
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+[data-theme="dark"] .theme-toggle .icon-sun  { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .icon-sun  { display: block; }
+    :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
+}
+
+/* =================================================================
+   HERO SECTION
+   ================================================================= */
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 2rem 3rem;
+    background: linear-gradient(
+        135deg,
+        var(--color-primary-lighter) 0%,
+        var(--color-primary-light) 40%,
+        var(--color-primary) 100%
+    );
+}
+
+.hero-content {
+    max-width: 36rem;
+    text-align: center;
+}
+
+.hero h1 {
+    color: var(--color-cream);
+    font-size: clamp(3rem, 8vw, 5rem);
+    line-height: 1.1;
+    margin: 0 0 1.5rem;
+}
+
+.hero p {
+    color: var(--color-cream);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.hero-name {
+    display: inline;
+    height: 1.6em;
+    width: auto;
+    vertical-align: baseline;
+}
+
+/* =================================================================
+   CONTENT SECTIONS - Reusable alternating themes
+   ================================================================= */
+
+.section {
+    padding: 4rem 2rem;
+}
+
+.section-content {
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.section h1,
+.section h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 1.5rem;
+}
+
+.section p {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    line-height: 1.8;
+    text-indent: 2em;
+}
+
+/* Light theme - parchment background */
+.section--light {
+    background: linear-gradient(
+        135deg,
+        var(--color-cream-light) 0%,
+        var(--color-cream) 60%,
+        var(--color-cream-dark) 100%
+    );
+}
+
+.section--light h1,
+.section--light h2 {
+    color: var(--color-primary);
+}
+
+.section--light p {
+    color: var(--color-text);
+}
+
+/* Dark theme - green background */
+.section--dark {
+    background: linear-gradient(
+        135deg,
+        var(--color-primary-light) 0%,
+        var(--color-primary) 60%,
+        var(--color-primary) 100%
+    );
+}
+
+.section--dark h1,
+.section--dark h2 {
+    color: var(--color-cream-dark);
+}
+
+.section--dark p {
+    color: var(--color-cream);
+}
+
+/* =================================================================
+   MOBILE NAV - CSS-only hamburger toggle & responsive menu
+   ================================================================= */
+
+.nav-check {
+    display: none;
+}
+
+.nav-toggle {
+    display: none;
+    background: color-mix(in srgb, var(--color-cream-light) 15%, transparent);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    flex-direction: column;
+    gap: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-toggle:hover {
+    background: color-mix(in srgb, var(--color-cream-light) 25%, transparent);
+}
+
+.hamburger-line {
+    display: block;
+    width: 1.25rem;
+    height: 2px;
+    background-color: var(--color-cream-light);
+    border-radius: 1px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Animate hamburger to X when checked */
+.nav-check:checked ~ .nav-toggle .hamburger-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.nav-check:checked ~ .nav-toggle .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-check:checked ~ .nav-toggle .hamburger-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 640px) {
+    .nav-toggle {
+        display: flex;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0.25rem;
+        padding: 0.5rem 0 0;
+    }
+
+    .nav-check:checked ~ .nav-menu {
+        display: flex;
+    }
+
+    .nav-menu li {
+        width: 100%;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.75rem;
+    }
+
+    .nav-link:hover {
+        opacity: 1;
+        background: color-mix(in srgb, var(--color-cream-light) 10%, transparent);
+    }
+
+    .theme-toggle {
+        margin-left: auto;
+    }
+}
+
+/* =================================================================
+   FOOTER - Auto-alternates opposite of last section
+   ================================================================= */
+
+.site-footer {
+    padding: 4rem 2rem;
+}
+
+.site-footer .footer-content {
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+/* If last section is dark → footer is light */
+main:has(> .section--dark:last-child) + .site-footer {
+    background: linear-gradient(
+        135deg,
+        var(--color-cream) 0%,
+        var(--color-cream-dark) 60%,
+        var(--color-cream-dark) 100%
+    );
+    color: var(--color-text);
+}
+
+main:has(> .section--dark:last-child) + .site-footer h1,
+main:has(> .section--dark:last-child) + .site-footer h2,
+main:has(> .section--dark:last-child) + .site-footer h3 {
+    color: var(--color-primary);
+}
+
+/* If last section is light → footer is dark */
+main:has(> .section--light:last-child) + .site-footer {
+    background: linear-gradient(
+        135deg,
+        var(--color-primary-light) 0%,
+        var(--color-primary) 60%,
+        var(--color-primary) 100%
+    );
+    color: var(--color-cream);
+}
+
+main:has(> .section--light:last-child) + .site-footer h1,
+main:has(> .section--light:last-child) + .site-footer h2,
+main:has(> .section--light:last-child) + .site-footer h3 {
+    color: var(--color-cream-dark);
+}
+
+/* =================================================================
+   SIGNATURE - Frosted glass pill, pinned bottom-right
+   ================================================================= */
+
+.signature {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+}
+
+.signature .container {
+    background-color: color-mix(in srgb, var(--color-primary-lighter) 55%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
+    box-shadow: 4px 4px 24px color-mix(in srgb, var(--color-primary-lighter) 35%, transparent);
+    border-radius: 2rem;
+    padding: 0.75rem 2rem;
+    width: fit-content;
+    max-width: 95%;
+}
+

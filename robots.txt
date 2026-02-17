@@ -1,0 +1,17 @@
+# CUSTOMIZE: Replace https://yourdomain.com with your actual production URL.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Optional: Block AI crawlers from scraping your content.
+# Uncomment the lines below if you want to prevent AI training on your site.
+# User-agent: GPTBot
+# Disallow: /
+# User-agent: ChatGPT-User
+# Disallow: /
+# User-agent: Google-Extended
+# Disallow: /
+# User-agent: CCBot
+# Disallow: /
