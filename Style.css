@@ -540,6 +540,55 @@ main:has(> .section--light:last-child) + .site-footer h3 {
 }
 
 /* =================================================================
+   PROJECT SECTIONS - Two-column layout with alternating image side
+   ================================================================= */
+
+.section--project .section-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    max-width: 64rem;
+}
+
+/* Light sections: text left, image right */
+.section--light.section--project .project-text {
+    order: 1;
+}
+
+.section--light.section--project .project-image {
+    order: 2;
+}
+
+/* Dark sections: image left, text right */
+.section--dark.section--project .project-image {
+    order: 1;
+}
+
+.section--dark.section--project .project-text {
+    order: 2;
+}
+
+/* Project images fill their column */
+.section--project .project-image img {
+    width: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 4px 4px 16px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+/* Stack to single column on mobile */
+@media (max-width: 768px) {
+    .section--project .section-content {
+        grid-template-columns: 1fr;
+    }
+
+    .section--project .project-image,
+    .section--project .project-text {
+        order: unset;
+    }
+}
+
+/* =================================================================
    SIGNATURE - Frosted glass pill, pinned bottom-right
    ================================================================= */
 
