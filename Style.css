@@ -546,7 +546,7 @@ main:has(> .section--light:last-child) + .site-footer h3 {
 .section--project .section-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 6rem;
     align-items: center;
     max-width: 64rem;
 }
@@ -574,6 +574,24 @@ main:has(> .section--light:last-child) + .site-footer h3 {
     width: 100%;
     border-radius: 0.5rem;
     box-shadow: 4px 4px 16px color-mix(in srgb, var(--color-primary) 25%, transparent);
+    box-shadow: none;
+}
+
+/* Circular badge behind a project logo */
+.project-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary-lighter), var(--color-primary));
+    box-shadow: 4px 4px 16px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+.project-badge img {
+    width: 100%;
+    height: auto;
 }
 
 /* Stack to single column on mobile */
