@@ -579,13 +579,39 @@
         height: 13px;
       }
 
-      /* ---- Single column layout ---- */
+      /* ---- Single column layout with flexbox for ordering ---- */
       .resume-grid {
-        display: block !important;
+        display: flex !important;
+        flex-direction: column;
       }
 
       .left-column {
-        margin-bottom: 0.75rem;
+        display: contents;
+      }
+
+      .right-column {
+        display: contents;
+      }
+
+      /* Order: Experience (1) → Highlight (2) → Education (3) → Skills (4) → Core Strengths (5) */
+      .left-column > .resume-card:first-child {
+        order: 1;
+      }
+
+      .highlight-card {
+        order: 2;
+      }
+
+      .left-column > .resume-card:nth-child(2) {
+        order: 3;
+      }
+
+      .right-column > .resume-card:nth-child(2) {
+        order: 4;
+      }
+
+      .right-column > .resume-card:nth-child(3) {
+        order: 5;
       }
 
       /* ---- Cards ---- */
@@ -596,15 +622,11 @@
         padding: 0.6rem 0.9rem;
         border-radius: 5px;
         break-inside: avoid;
-      }
-
-      .left-column > .resume-card,
-      .right-column > .resume-card {
         margin-top: 0 !important;
         margin-bottom: 0.75rem;
       }
 
-      /* Experience card spans pages, force page 2 at Education */
+      /* Experience card spans pages, force page 2 after it */
       .left-column > .resume-card:first-child {
         break-inside: auto;
         break-after: page;
@@ -1021,8 +1043,23 @@
 
         <!-- Right Column -->
         <div class="right-column">
+          <!-- Highlight -->
+          <div class="resume-card highlight-card animate-in delay-1">
+            <h2 class="resume-section-title">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              What Sets Me Apart
+            </h2>
+            <p class="highlight-text">
+              I spent 7 years teaching kids how the world works, then went back to school
+               to learn how to build the systems that run it.
+              I don't just write code — I make sure the people around me understand it too.
+            </p>
+          </div>
+
           <!-- Technical Skills -->
-          <div class="resume-card animate-in delay-2">
+          <div class="resume-card animate-in delay-2" style="margin-top: 2rem;">
             <h2 class="resume-section-title">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -1123,20 +1160,6 @@
             </div>
           </div>
 
-          <!-- Highlight -->
-          <div class="resume-card highlight-card animate-in delay-4" style="margin-top: 2rem;">
-            <h2 class="resume-section-title">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              What Sets Me Apart
-            </h2>
-            <p class="highlight-text">
-              I spent 7 years teaching kids how the world works, then went back to school
-               to learn how to build the systems that run it. 
-              I don't just write code — I make sure the people around me understand it too.
-            </p>
-          </div>
         </div>
       </div>
 
