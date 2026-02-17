@@ -507,6 +507,38 @@ main:has(> .section--light:last-child) + .site-footer h3 {
     color: var(--color-cream-dark);
 }
 
+.site-footer .footer-content {
+    text-align: center;
+}
+
+.site-footer .footer-content p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.site-footer .footer-content a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.site-footer .footer-content a:hover {
+    opacity: 0.8;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+}
+
+.footer-copy {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    opacity: 0.7;
+}
+
 /* =================================================================
    SIGNATURE - Frosted glass pill, pinned bottom-right
    ================================================================= */
