@@ -481,60 +481,7 @@
       min-height: 100vh;
     }
 
-    /* Print Styles */
-    @media print {
-      .back-button,
-      .social-links {
-        display: none;
-      }
-
-      .resume-page {
-        padding-top: 0;
-        background: white;
-      }
-
-      .resume-header {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        border-radius: 0;
-        margin-bottom: 1rem;
-        padding: 1.5rem;
-      }
-
-      .resume-name {
-        font-size: 24pt;
-      }
-
-      .resume-title {
-        font-size: 12pt;
-      }
-
-      .resume-card {
-        box-shadow: none;
-        border: 1px solid var(--color-border);
-        page-break-inside: avoid;
-        padding: 1rem;
-      }
-
-      .resume-grid {
-        display: block;
-      }
-
-      .resume-card {
-        margin-bottom: 1rem;
-      }
-
-      .skill-tag:hover {
-        background: var(--color-bg);
-        color: var(--color-text-muted);
-        transform: none;
-      }
-
-      .skill-bar-fill {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-    }
+    /* Print Styles — see Style.css @media print section */
 
     /* Responsive */
     @media (max-width: 767px) {
