@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/x-icon" href="/Assets/favicon.ico">
+  <link rel="stylesheet" href="Style.css">
+  <title>KVM & Partition Guide</title>
+  <style>
+    .guide-body {
+      padding: 5rem 2rem 2rem;
+      max-width: 52rem;
+      margin: 0 auto;
+      color: var(--color-text);
+    }
+    .guide-body h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--color-primary);
+      margin: 0 0 1rem;
+    }
+    .guide-body h2 {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      color: var(--color-primary);
+      margin: 2.5rem 0 0.75rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--color-border);
+    }
+    .guide-body h3 {
+      font-size: 1.15rem;
+      color: var(--color-primary-light);
+      margin: 1.5rem 0 0.5rem;
+    }
+    .guide-body p, .guide-body li {
+      font-size: 1rem;
+      line-height: 1.8;
+      margin: 0.5rem 0;
+    }
+    .guide-body ul, .guide-body ol {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    .guide-body ol {
+      list-style: decimal;
+    }
+    .guide-body ol ol {
+      list-style: lower-alpha;
+    }
+    .guide-body pre {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      margin: 0.75rem 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .guide-body code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9em;
+      background: var(--color-surface);
+      padding: 0.15em 0.35em;
+      border-radius: 0.25rem;
+    }
+    .guide-body pre code {
+      background: none;
+      padding: 0;
+    }
+    .guide-body .warning {
+      background: hsl(36, 100%, 93%);
+      border-left: 4px solid var(--color-secondary);
+      padding: 1rem 1.25rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin: 1rem 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .warning {
+        background: hsl(36, 30%, 15%);
+      }
+    }
+    [data-theme="dark"] .warning {
+      background: hsl(36, 30%, 15%);
+    }
+    .guide-body .info {
+      background: hsl(120, 30%, 92%);
+      border-left: 4px solid var(--color-primary-light);
+      padding: 1rem 1.25rem;
+      border-radius: 0 0.5rem 0.5rem 0;
+      margin: 1rem 0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .info {
+        background: hsl(120, 20%, 15%);
+      }
+    }
+    [data-theme="dark"] .info {
+      background: hsl(120, 20%, 15%);
+    }
+    .guide-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+    }
+    .guide-body th, .guide-body td {
+      border: 1px solid var(--color-border);
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+    }
+    .guide-body th {
+      background: var(--color-surface);
+      font-weight: bold;
+    }
+    .guide-body .toc {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .guide-body .toc h3 {
+      margin: 0 0 0.5rem;
+      color: var(--color-primary);
+    }
+    .guide-body .toc ol {
+      margin: 0;
+    }
+    .guide-body .toc li {
+      margin: 0.25rem 0;
+    }
+    .guide-body .toc a {
+      color: var(--color-primary-light);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .guide-body .toc a:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+<div class="guide-body">
+
+  <h1>KVM Setup & Partition Guide</h1>
+  <p>Personal reference for wiping the Windows 11 dual-boot, merging partitions, and setting up a Windows VM with KVM/QEMU.</p>
+
+  <div class="toc">
+    <h3>Table of Contents</h3>
+    <ol>
+      <li><a href="#part1">Part 1: Wipe Windows & Merge Partitions</a></li>
+      <li><a href="#part2">Part 2: KVM/QEMU + virt-manager Setup</a></li>
+      <li><a href="#reference">Quick Reference Commands</a></li>
+    </ol>
+  </div>
+
+  <!-- ============================================================ -->
+  <h2 id="part1">Part 1: Wipe Windows & Merge Partitions</h2>
+  <!-- ============================================================ -->
+
+  <h3>Current Partition Layout</h3>
+  <table>
+    <tr><th>Partition</th><th>Size</th><th>Type</th><th>What It Is</th></tr>
+    <tr><td><code>nvme0n1p1</code></td><td>512M</td><td>EFI (vfat)</td><td>Shared boot partition &mdash; <strong>KEEP</strong></td></tr>
+    <tr><td><code>nvme0n1p2</code></td><td>1.3T</td><td>ext4</td><td>Linux install (<code>/</code>) &mdash; <strong>EXPAND THIS</strong></td></tr>
+    <tr><td><code>nvme0n1p3</code></td><td>140.5G</td><td>exfat</td><td>"Shared" drive &mdash; <strong>DELETE</strong></td></tr>
+    <tr><td><code>nvme0n1p4</code></td><td>16M</td><td>&mdash;</td><td>Windows reserved &mdash; <strong>DELETE</strong></td></tr>
+    <tr><td><code>nvme0n1p5</code></td><td>402.9G</td><td>NTFS</td><td>Windows 11 install &mdash; <strong>DELETE</strong></td></tr>
+    <tr><td><code>nvme0n1p6</code></td><td>703M</td><td>NTFS</td><td>Windows recovery &mdash; <strong>DELETE</strong></td></tr>
+  </table>
+  <p>After merging, Linux will grow from ~1.3T to ~1.8T.</p>
+
+  <div class="warning">
+    <strong>WARNING:</strong> This is destructive and irreversible. Power loss during resize = data loss. Make sure your machine is plugged in.
+  </div>
+
+  <h3>Step 1: Edit fstab (Do This Before Rebooting)</h3>
+  <p>Remove the shared drive mount so Linux doesn't try to mount a deleted partition on boot:</p>
+  <pre><code>sudo sed -i '18s/^/#/' /etc/fstab</code></pre>
+  <p>Or manually edit <code>/etc/fstab</code> and add a <code>#</code> at the start of line 18 (the <code>/mnt/shared</code> exfat entry).</p>
+  <p>Verify:</p>
+  <pre><code>cat /etc/fstab</code></pre>
+  <p>Line 18 should now look like:</p>
+  <pre><code>#UUID=6FEB-374D  /mnt/shared  exfat  defaults,uid=1000,gid=1000,nofail  0  0</code></pre>
+
+  <h3>Step 2: Boot from a Live USB</h3>
+  <p>You <strong>cannot</strong> resize your root partition while it's mounted. You need a Linux live USB.</p>
+  <ol>
+    <li>Download an Ubuntu ISO if you don't have one</li>
+    <li>Flash it to a USB:
+      <pre><code>sudo dd if=ubuntu.iso of=/dev/sdX bs=4M status=progress</code></pre>
+      <p>(Replace <code>/dev/sdX</code> with your USB device &mdash; check with <code>lsblk</code>. Or use Balena Etcher.)</p>
+    </li>
+    <li>Reboot and boot from the USB (usually <strong>F12</strong> or <strong>F2</strong> at boot for the boot menu)</li>
+    <li>Choose <strong>"Try Ubuntu"</strong> (don't install)</li>
+  </ol>
+
+  <h3>Step 3: Open GParted</h3>
+  <p>Once in the live environment, open a terminal:</p>
+  <pre><code>sudo apt install gparted -y   # usually pre-installed
+sudo gparted</code></pre>
+
+  <h3>Step 4: Delete the Windows & Shared Partitions</h3>
+  <p>In GParted, select your NVMe drive (<code>/dev/nvme0n1</code>), then:</p>
+  <ol>
+    <li><strong>Right-click <code>nvme0n1p6</code></strong> (703M NTFS, Windows recovery) &rarr; <strong>Delete</strong></li>
+    <li><strong>Right-click <code>nvme0n1p5</code></strong> (402.9G NTFS, Windows install) &rarr; <strong>Delete</strong></li>
+    <li><strong>Right-click <code>nvme0n1p4</code></strong> (16M, Windows reserved) &rarr; <strong>Delete</strong></li>
+    <li><strong>Right-click <code>nvme0n1p3</code></strong> (140.5G exfat, Shared) &rarr; <strong>Delete</strong></li>
+  </ol>
+  <p>You should now see one big block of <strong>unallocated space</strong> (~544G) to the right of <code>nvme0n1p2</code>.</p>
+
+  <h3>Step 5: Expand the Linux Partition</h3>
+  <ol>
+    <li><strong>Right-click <code>nvme0n1p2</code></strong> (your 1.3T ext4 Linux partition) &rarr; <strong>Resize/Move</strong></li>
+    <li>Drag the right edge all the way to the right to fill all the unallocated space</li>
+    <li>Click <strong>Resize/Move</strong></li>
+  </ol>
+
+  <h3>Step 6: Apply Changes</h3>
+  <p>Click the <strong>green checkmark</strong> (Apply All Operations) in the toolbar. This will:</p>
+  <ul>
+    <li>Delete the 4 partitions</li>
+    <li>Resize your Linux partition from ~1.3T to ~1.8T</li>
+  </ul>
+  <p>This may take 5&ndash;30 minutes depending on disk usage.</p>
+
+  <h3>Step 7: Fix the Bootloader</h3>
+  <p>Since we deleted Windows, clean up GRUB so it no longer shows the Windows boot entry:</p>
+  <pre><code># Mount your Linux partition
+sudo mount /dev/nvme0n1p2 /mnt
+sudo mount /dev/nvme0n1p1 /mnt/boot/efi
+sudo mount --bind /dev /mnt/dev
+sudo mount --bind /proc /mnt/proc
+sudo mount --bind /sys /mnt/sys
+
+# Chroot into your install
+sudo chroot /mnt
+
+# Update GRUB to remove Windows entry
+update-grub
+
+# Exit chroot and unmount
+exit
+sudo umount -R /mnt</code></pre>
+
+  <h3>Step 8: Reboot</h3>
+  <p>Remove the USB and reboot. Verify with:</p>
+  <pre><code>df -h /</code></pre>
+  <p>You should see ~1.8T for your root partition.</p>
+
+  <!-- ============================================================ -->
+  <h2 id="part2">Part 2: KVM/QEMU + virt-manager Setup</h2>
+  <!-- ============================================================ -->
+
+  <p>Do this after you're back in your regular Linux install.</p>
+
+  <div class="info">
+    <strong>System info:</strong> 64 CPU threads, 32GB RAM, KVM virtualization supported. This will run great.
+  </div>
+
+  <h3>Step 1: Install KVM and Tools</h3>
+  <pre><code>sudo apt update
+sudo apt install -y qemu-kvm libvirt-daemon-system libvirt-clients \
+  bridge-utils virt-manager ovmf</code></pre>
+  <table>
+    <tr><th>Package</th><th>Purpose</th></tr>
+    <tr><td><code>qemu-kvm</code></td><td>The actual VM hypervisor</td></tr>
+    <tr><td><code>libvirt-daemon-system</code></td><td>Management daemon for VMs</td></tr>
+    <tr><td><code>libvirt-clients</code></td><td>CLI tools (<code>virsh</code> command)</td></tr>
+    <tr><td><code>bridge-utils</code></td><td>Network bridging for VM internet access</td></tr>
+    <tr><td><code>virt-manager</code></td><td>GUI to manage VMs (like VirtualBox's GUI)</td></tr>
+    <tr><td><code>ovmf</code></td><td>UEFI firmware for VMs (needed for Windows 11)</td></tr>
+  </table>
+
+  <h3>Step 2: Add Yourself to Required Groups</h3>
+  <pre><code>sudo usermod -aG libvirt,kvm $USER</code></pre>
+  <p><strong>Log out and back in</strong> (or reboot) for group changes to take effect.</p>
+
+  <h3>Step 3: Verify Everything Works</h3>
+  <pre><code># Check KVM is working
+virsh list --all
+
+# Should show an empty table, no errors</code></pre>
+
+  <h3>Step 4: Download What You Need</h3>
+  <ol>
+    <li><strong>Windows 10 or 11 ISO</strong> &mdash; Download from Microsoft's website</li>
+    <li><strong>VirtIO drivers ISO</strong> &mdash; These give your VM much better disk/network performance:
+      <pre><code>wget https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso \
+  -O ~/Downloads/virtio-win.iso</code></pre>
+    </li>
+  </ol>
+
+  <h3>Step 5: Create the VM in virt-manager</h3>
+  <ol>
+    <li>Open <strong>virt-manager</strong> from your app launcher (or run <code>virt-manager</code> in terminal)</li>
+    <li>Click <strong>"Create a new virtual machine"</strong> (the monitor icon with a star)</li>
+    <li><strong>Step 1 &mdash; Install media:</strong>
+      <ol>
+        <li>Select "Local install media (ISO image)"</li>
+        <li>Click "Browse" &rarr; "Browse Local" &rarr; Select your Windows ISO</li>
+        <li>It should auto-detect "Microsoft Windows 10/11". If not, type it manually.</li>
+      </ol>
+    </li>
+    <li><strong>Step 2 &mdash; Memory and CPU:</strong>
+      <ol>
+        <li>RAM: <strong>8192 MB</strong> (8GB &mdash; you have 32GB so this is fine)</li>
+        <li>CPUs: <strong>8</strong> (you have 64 threads, giving 8 to the VM is plenty)</li>
+      </ol>
+    </li>
+    <li><strong>Step 3 &mdash; Storage:</strong>
+      <ol>
+        <li>Select "Create a disk image for the virtual machine"</li>
+        <li>Size: <strong>100 GB</strong> (or more if your ROM hack tools need space)</li>
+      </ol>
+    </li>
+    <li><strong>Step 4 &mdash; Final settings:</strong>
+      <ol>
+        <li>Check <strong>"Customize configuration before install"</strong></li>
+        <li>Name it something like "Windows-ROMHack"</li>
+        <li>Click <strong>Finish</strong></li>
+      </ol>
+    </li>
+  </ol>
+
+  <h3>Step 6: Customize Before Installing (Important!)</h3>
+  <p>The configuration window opens. Make these changes:</p>
+
+  <p><strong>Overview tab:</strong></p>
+  <ul>
+    <li>Firmware: Change to <strong>UEFI x86_64: /usr/share/OVMF/OVMF_CODE_4M.fd</strong><br>
+    (Required for Windows 11, recommended for Windows 10 too)</li>
+  </ul>
+
+  <p><strong>CPUs tab:</strong></p>
+  <ul>
+    <li>Topology: Check "Manually set" &rarr; 1 socket, 4 cores, 2 threads</li>
+  </ul>
+
+  <p><strong>Disk (VirtIO Disk 1) tab:</strong></p>
+  <ul>
+    <li>Disk bus: Change to <strong>VirtIO</strong> (much faster than the default SATA)</li>
+  </ul>
+
+  <p><strong>NIC tab:</strong></p>
+  <ul>
+    <li>Device model: Change to <strong>virtio</strong> (faster networking)</li>
+  </ul>
+
+  <p><strong>Add Hardware &rarr; Storage:</strong></p>
+  <ul>
+    <li>Select "CDROM device"</li>
+    <li>Browse to your <code>virtio-win.iso</code></li>
+    <li>This adds a second CD drive with the VirtIO drivers</li>
+  </ul>
+
+  <p>Click <strong>"Begin Installation"</strong>.</p>
+
+  <h3>Step 7: Install Windows</h3>
+  <p>The Windows installer will start. When you get to the <strong>"Where do you want to install Windows?"</strong> screen:</p>
+  <ol>
+    <li><strong>You'll see no drives listed</strong> (because Windows doesn't have VirtIO drivers yet)</li>
+    <li>Click <strong>"Load driver"</strong></li>
+    <li>Browse to the VirtIO CD &rarr; <code>viostor</code> &rarr; <code>w11</code> (or <code>w10</code>) &rarr; <code>amd64</code></li>
+    <li>Select the driver and click Next</li>
+    <li>Your virtual disk will now appear &mdash; select it and continue the install</li>
+  </ol>
+
+  <h3>Step 8: Post-Install &mdash; Install VirtIO Guest Tools</h3>
+  <p>After Windows boots:</p>
+  <ol>
+    <li>Open File Explorer</li>
+    <li>Go to the VirtIO CD drive</li>
+    <li>Run <code>virtio-win-guest-tools.exe</code></li>
+    <li>This installs all remaining drivers (network, display, balloon, etc.)</li>
+  </ol>
+
+  <h3>Step 9: Set Up a Shared Folder</h3>
+  <p>Easiest way to move ROM files between Linux and the Windows VM:</p>
+
+  <p><strong>On the Linux side:</strong></p>
+  <pre><code>mkdir -p ~/vm-shared</code></pre>
+
+  <p><strong>In virt-manager</strong> (shut down the VM first):</p>
+  <ol>
+    <li>Click <strong>"Add Hardware"</strong> &rarr; <strong>Filesystem</strong></li>
+    <li>Driver: <strong>virtiofs</strong></li>
+    <li>Source path: <code>/home/matthew/vm-shared</code></li>
+    <li>Target path: <code>share</code> (this is just a label, not a Windows path)</li>
+  </ol>
+
+  <p><strong>In the Windows VM:</strong></p>
+  <ol>
+    <li>Install <strong>WinFsp</strong> from <code>https://winfsp.dev/</code></li>
+    <li>The VirtIO FS driver should already be installed from the guest tools</li>
+    <li>After WinFsp is installed, the shared folder appears as a network drive (usually <code>Z:</code>)</li>
+  </ol>
+
+  <div class="info">
+    <strong>Alternative:</strong> If shared folders are finicky, just use a USB drive or drag-and-drop through virt-manager's SPICE display.
+  </div>
+
+  <h3>Step 10: Quality of Life Tweaks</h3>
+
+  <p><strong>Clipboard sharing (copy/paste between host and VM):</strong></p>
+  <ul>
+    <li>The <code>spice-vdagent</code> should be installed by the VirtIO guest tools</li>
+    <li>If not, install SPICE Guest Tools in Windows from <code>https://www.spice-space.org/download.html</code></li>
+  </ul>
+
+  <p><strong>Display resolution:</strong></p>
+  <ul>
+    <li>In VM settings, change Video to <strong>QXL</strong> or <strong>Virtio</strong> for resizable display</li>
+    <li>The VirtIO guest tools should make the VM display resize with the window</li>
+  </ul>
+
+  <p><strong>Auto-start the VM (optional):</strong></p>
+  <pre><code>virsh autostart Windows-ROMHack</code></pre>
+
+  <!-- ============================================================ -->
+  <h2 id="reference">Quick Reference Commands</h2>
+  <!-- ============================================================ -->
+
+  <pre><code># Start / stop VMs from terminal
+virsh start Windows-ROMHack
+virsh shutdown Windows-ROMHack        # graceful shutdown
+virsh destroy Windows-ROMHack         # force off (like pulling the plug)
+
+# List all VMs
+virsh list --all
+
+# Take a snapshot (save state before risky changes)
+virsh snapshot-create-as Windows-ROMHack "before-mod" "Clean state"
+virsh snapshot-revert Windows-ROMHack "before-mod"
+
+# Open the GUI manager
+virt-manager</code></pre>
+
+  <h3>Summary Checklist</h3>
+  <ol>
+    <li>Edit <code>/etc/fstab</code> &mdash; comment out the shared mount line</li>
+    <li>Boot from live USB &mdash; use GParted to delete Windows partitions and expand Linux</li>
+    <li>Update GRUB &mdash; remove the Windows boot entry</li>
+    <li>Install KVM &mdash; <code>sudo apt install qemu-kvm libvirt-daemon-system virt-manager ovmf</code></li>
+    <li>Add user to groups &mdash; <code>sudo usermod -aG libvirt,kvm $USER</code> then re-login</li>
+    <li>Create VM &mdash; use virt-manager with VirtIO drivers for best performance</li>
+    <li>Set up shared folder &mdash; use virtiofs to pass ROM files between host and VM</li>
+  </ol>
+
+</div>
+
+<script src="Scripts/Universal.js"></script>
+</body>
+</html>
